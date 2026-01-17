@@ -3,6 +3,7 @@ package com.example.pomodoro
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -14,20 +15,31 @@ import kotlinx.coroutines.launch
 
 class PomodoroViewModel : ViewModel() {
 
+    var tempoFocoMinutos by mutableFloatStateOf(60f)
+    var tempoCurtoMinutos by mutableFloatStateOf(10f)
+    var tempoLongoMinutos by mutableFloatStateOf(30f)
     var currentMode by mutableStateOf(PomodoroMode.FOCUS)
         private set
     var timerStatus by mutableStateOf(false)
         private set
-    var timeLeft by mutableStateOf(PomodoroMode.FOCUS.timeSeconds)
+    var timeLeft by mutableStateOf(getTempoPeloModo(currentMode))
         private set
     var progressIndicator by mutableStateOf(1.0f)
         private set
     private var timerJob: Job? = null
 
+    private fun getTempoPeloModo(modo: PomodoroMode): Long {
+        val minutosConfigurados = when (modo) {
+            PomodoroMode.FOCUS -> tempoFocoMinutos
+            PomodoroMode.SHORT_BREAK -> tempoCurtoMinutos
+            PomodoroMode.LONG_BREAK -> tempoLongoMinutos
+        }
+        return (minutosConfigurados * 60).toLong() // Converte para segundos
+    }
     fun selectMode(newMode : PomodoroMode){
         pause()
         currentMode = newMode
-        timeLeft = newMode.timeSeconds
+        timeLeft = getTempoPeloModo(newMode)
         progressIndicator = 1f
     }
     fun toggleTime(){
@@ -45,7 +57,7 @@ class PomodoroViewModel : ViewModel() {
             while(timeLeft > 0){
                 delay(1000L)
                 timeLeft--
-                progressIndicator = timeLeft.toFloat() / currentMode.timeSeconds.toFloat()
+                progressIndicator = timeLeft.toFloat() / getTempoPeloModo(currentMode).toFloat()
             }
             timerStatus = false
             progressIndicator = 0f
@@ -59,7 +71,7 @@ class PomodoroViewModel : ViewModel() {
 
     fun reset(){
         timerStatus = false
-        timeLeft = currentMode.timeSeconds
+        timeLeft = getTempoPeloModo(currentMode)
         progressIndicator = 1f
         timerJob?.cancel()
     }
