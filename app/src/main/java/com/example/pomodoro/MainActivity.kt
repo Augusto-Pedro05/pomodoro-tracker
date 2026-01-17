@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -24,6 +26,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -160,8 +164,106 @@ fun MainView(){
             when (currentScreen) {
                 Destination.Timer -> InitialPomodoroScreen() // Sua tela atual
                 Destination.Historico -> ScreenPlaceholder("Histórico")
-                Destination.Config -> ScreenPlaceholder("Configurações")
+                Destination.Config -> ConfigScreen()
             }
         }
     }
+}
+@Composable
+fun ConfigItem(
+    title: String,
+    value: Float,
+    color: Color,
+    steps: Int,
+    valueRange: Float,
+    onValueChange: (Float) -> Unit
+){
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween // Texto na esq, Valor na dir
+        ) {
+            Text(text = title, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = "${value.toInt()} min",
+                fontWeight = FontWeight.Bold,
+                color = color
+            )
+        }
+
+        Slider(
+            value = value,
+            onValueChange = onValueChange,
+            valueRange = 0f..valueRange, // Mínimo 1 min, Máximo 60 min
+            steps = steps, // Faz o slider pular de 1 em 1 (sem números quebrados)
+            colors = SliderDefaults.colors(
+                thumbColor = color,
+                activeTrackColor = color,
+                inactiveTrackColor = color.copy(alpha = 0.2f)
+            )
+        )
+    }
+}
+@Composable
+fun ConfigScreen(
+    viewModel: PomodoroViewModel = viewModel()
+    ) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ){
+        Text("Configurações", style = MaterialTheme.typography.headlineMedium)
+        Spacer(modifier = Modifier.height(24.dp))
+        HorizontalDivider()
+        Spacer(modifier = Modifier.height(24.dp))
+        ConfigItem(
+            title = "Tempo de Foco",
+            value = viewModel.tempoFocoMinutos,
+            color = Color(0xFFF44336), // Vermelho (ou use PomodoroMode.FOCO.color)
+            steps = 11,
+            valueRange = 120f,
+            onValueChange = { newValue ->
+                viewModel.tempoFocoMinutos = newValue
+                if(viewModel.currentMode == PomodoroMode.FOCUS && !viewModel.timerStatus && viewModel.progressIndicator == 1f && viewModel.timeLeft <= 0){
+                    viewModel.reset()
+                }
+            }
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        ConfigItem(
+            title = "Pausa Curta",
+            value = viewModel.tempoCurtoMinutos,
+            color = Color(0xFF4CAF50),// Verde
+            steps = 5,
+            valueRange = 30f,
+            onValueChange = { newValue ->
+                viewModel.tempoCurtoMinutos = newValue
+                if(viewModel.currentMode == PomodoroMode.SHORT_BREAK && !viewModel.timerStatus && viewModel.progressIndicator == 1f && viewModel.timeLeft <= 0){
+                    viewModel.reset()
+                }
+            }
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        ConfigItem(
+            title = "Pausa Longa",
+            value = viewModel.tempoLongoMinutos,
+            color = Color(0xFF2196F3),// Azul
+            steps = 11,
+            valueRange = 120f,
+            onValueChange = { newValue ->
+                viewModel.tempoLongoMinutos = newValue
+                if(viewModel.currentMode == PomodoroMode.LONG_BREAK && !viewModel.timerStatus && viewModel.progressIndicator == 1f && viewModel.timeLeft <= 0){
+                    viewModel.reset()
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun HistoricoScreen() {
+    Text("Histórico")
+
 }
