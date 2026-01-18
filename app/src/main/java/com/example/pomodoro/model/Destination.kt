@@ -1,4 +1,4 @@
-package com.example.pomodoro
+package com.example.pomodoro.model
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
