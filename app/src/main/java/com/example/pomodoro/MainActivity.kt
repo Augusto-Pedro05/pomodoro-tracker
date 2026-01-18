@@ -8,6 +8,7 @@ import com.example.pomodoro.ui.screens.MainView
 import com.example.pomodoro.ui.theme.PomodoroTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

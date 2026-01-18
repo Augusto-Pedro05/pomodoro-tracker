@@ -33,12 +33,12 @@ fun ConfigScreen(
         Spacer(modifier = Modifier.height(24.dp))
         ConfigItem(
             title = "Tempo de Foco",
-            value = viewModel.tempoFocoMinutos,
+            value = viewModel.focusTimeMinutes,
             color = Color(0xFFF44336), // Vermelho (ou use PomodoroMode.FOCO.color)
             steps = 11,
             valueRange = 120f,
             onValueChange = { newValue ->
-                viewModel.tempoFocoMinutos = newValue
+                viewModel.focusTimeMinutes = newValue
                 if(viewModel.currentMode == PomodoroMode.FOCUS && !viewModel.timerStatus && (viewModel.progressIndicator == 1f || viewModel.timeLeft <= 0)){
                     viewModel.reset()
                 }
@@ -47,12 +47,12 @@ fun ConfigScreen(
         Spacer(modifier = Modifier.height(24.dp))
         ConfigItem(
             title = "Pausa Curta",
-            value = viewModel.tempoCurtoMinutos,
+            value = viewModel.shortBreakTimeMinutes,
             color = Color(0xFF4CAF50),// Verde
             steps = 5,
             valueRange = 30f,
             onValueChange = { newValue ->
-                viewModel.tempoCurtoMinutos = newValue
+                viewModel.shortBreakTimeMinutes = newValue
                 if(viewModel.currentMode == PomodoroMode.SHORT_BREAK && !viewModel.timerStatus && (viewModel.progressIndicator == 1f || viewModel.timeLeft <= 0)){
                     viewModel.reset()
                 }
@@ -61,12 +61,12 @@ fun ConfigScreen(
         Spacer(modifier = Modifier.height(24.dp))
         ConfigItem(
             title = "Pausa Longa",
-            value = viewModel.tempoLongoMinutos,
+            value = viewModel.longBreakTimeMinutes,
             color = Color(0xFF2196F3),// Azul
             steps = 11,
             valueRange = 120f,
             onValueChange = { newValue ->
-                viewModel.tempoLongoMinutos = newValue
+                viewModel.longBreakTimeMinutes = newValue
                 if(viewModel.currentMode == PomodoroMode.LONG_BREAK && !viewModel.timerStatus && (viewModel.progressIndicator == 1f || viewModel.timeLeft <= 0)){
                     viewModel.reset()
                 }
