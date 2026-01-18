@@ -15,13 +15,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pomodoro.model.Destination
+import com.example.pomodoro.viewModel.AppViewModelProvider
 import com.example.pomodoro.viewModel.PomodoroViewModel
 
 @Composable
 fun MainView() {
+    val sharedViewModel: PomodoroViewModel = viewModel(factory = AppViewModelProvider.Factory)
     var currentScreen by remember { mutableStateOf<Destination>(Destination.Timer) }
     val screens = listOf(Destination.Timer, Destination.Historico, Destination.Config)
-    val sharedViewModel: PomodoroViewModel = viewModel()
 
     Scaffold(
         bottomBar = {
