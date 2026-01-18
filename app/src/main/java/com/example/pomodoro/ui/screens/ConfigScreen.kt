@@ -39,6 +39,7 @@ fun ConfigScreen(
             valueRange = 120f,
             onValueChange = { newValue ->
                 viewModel.focusTimeMinutes = newValue
+                viewModel.updateFocusTime(newValue)
                 if(viewModel.currentMode == PomodoroMode.FOCUS && !viewModel.timerStatus && (viewModel.progressIndicator == 1f || viewModel.timeLeft <= 0)){
                     viewModel.reset()
                 }
@@ -53,6 +54,7 @@ fun ConfigScreen(
             valueRange = 30f,
             onValueChange = { newValue ->
                 viewModel.shortBreakTimeMinutes = newValue
+                viewModel.updateShortBreakTime(newValue)
                 if(viewModel.currentMode == PomodoroMode.SHORT_BREAK && !viewModel.timerStatus && (viewModel.progressIndicator == 1f || viewModel.timeLeft <= 0)){
                     viewModel.reset()
                 }
@@ -67,6 +69,7 @@ fun ConfigScreen(
             valueRange = 120f,
             onValueChange = { newValue ->
                 viewModel.longBreakTimeMinutes = newValue
+                viewModel.updateLongBreakTime(newValue)
                 if(viewModel.currentMode == PomodoroMode.LONG_BREAK && !viewModel.timerStatus && (viewModel.progressIndicator == 1f || viewModel.timeLeft <= 0)){
                     viewModel.reset()
                 }
