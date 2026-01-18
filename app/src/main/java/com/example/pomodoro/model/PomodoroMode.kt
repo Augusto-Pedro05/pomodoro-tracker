@@ -1,4 +1,4 @@
-package com.example.pomodoro
+package com.example.pomodoro.model
 
 import androidx.compose.ui.graphics.Color
 
